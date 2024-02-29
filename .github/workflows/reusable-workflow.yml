@@ -1,0 +1,11 @@
+# See reusable-workflow.yaml
+name: Call Reusable Workflow
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/reusable-workflow.yaml
+    with:
+      tags: foo
