@@ -1,11 +1,34 @@
-# See reusable-workflow.yaml
-name: Call Reusable Workflow
+name: Reusable
+
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      tags:
+        type: string
+        required: true
+
+#    outputs: You can add outputs as well as inputs
 jobs:
-  call-workflow:
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      tags: foo
+  build:
+    runs-on:
+      - self-hosted
+      - build
+    steps:
+      - uses: actions/checkout@v4
+      # - uses: sainsburys-tech/bosun-actions-setup@v1
+        name: Setup
+        id: setup
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # tags: "$ECR/$BOSUN_PRODUCT/$BOSUN_APP:${{ inputs.tags }}"
+          # Because this is a reusable workflow we have to tell it the name of the job to wait for
+          job-name: "call-workflow / build"
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
+        if: ${{ steps.setup.outputs.imageExists == 'false' }}
+        # Parameters can be passed in using the with attribute, the simplest possible approach to this is to pass the entire dockerParams object in. This will only push the image that is built when the workflow was triggered by changes being pushed to a branch (to avoid pushing images in PRs)
+        with:
+          context: .
+          push: true
+          tags: ${{ fromJson(steps.setup.outputs.dockerParams).tags }}
