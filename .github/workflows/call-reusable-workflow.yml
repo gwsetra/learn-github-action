@@ -1,0 +1,11 @@
+# See reusable-workflow.yaml
+name: Call Reusable Workflow
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      tags: test-doang
