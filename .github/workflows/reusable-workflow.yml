@@ -6,6 +6,6 @@ on:
   workflow_dispatch:
 jobs:
   call-workflow:
-    uses: ./.github/workflows/reusable-workflow.yaml
+    uses: ./.github/workflows/reusable-workflow.yml
     with:
       tags: foo
