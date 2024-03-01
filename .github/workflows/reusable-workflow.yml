@@ -14,6 +14,10 @@ jobs:
       # - uses: sainsburys-tech/bosun-actions-setup@v1
         name: Setup
         id: setup
+      - name: Run a one-line script
+        run: ${{ fromJson(steps.setup) }}
+      - name: Run a one-line script
+        run: ${{ fromJson(steps.setup.outputs.dockerParams) }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # tags: "$ECR/$BOSUN_PRODUCT/$BOSUN_APP:${{ inputs.tags }}"
@@ -21,10 +25,6 @@ jobs:
           job-name: "call-workflow / build"
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
-      - name: Run a one-line script
-        run: ${{ fromJson(steps.setup) }}
-      - name: Run a one-line script
-        run: ${{ fromJson(steps.setup.outputs.dockerParams) }}
         # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
         # if: ${{ steps.setup.outputs.imageExists == 'false' }}
         # Parameters can be passed in using the with attribute, the simplest possible approach to this is to pass the entire dockerParams object in. This will only push the image that is built when the workflow was triggered by changes being pushed to a branch (to avoid pushing images in PRs)
