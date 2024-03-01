@@ -15,7 +15,7 @@ jobs:
         name: Setup
         id: setup
       - name: Run a one-line script
-        run: echo ${{ steps.setup }}
+        run: echo ${{ fromJson(steps.setup) }}
       - name: Run a one-line script
         run: echo ${{ fromJson(steps.setup.outputs.dockerParams) }}
         # with:
