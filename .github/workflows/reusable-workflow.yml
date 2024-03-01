@@ -81,4 +81,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: testlatihan
+          repository: gwsetra/testlatihan
+          tags: gwsetra/testlatihan:testlatihan
