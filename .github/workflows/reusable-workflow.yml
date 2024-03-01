@@ -60,7 +60,7 @@ jobs:
       - name: Run a one-line script 3
         run: echo ${{ (steps.setup.outputs.dockerParams) }}
       - name: Run a one-line script 4
-        run: ${{ steps.setup.outputs.imageExists == 'false' }}
+        run: ${{ steps.setup.outputs.imageExists}}
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
         # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
