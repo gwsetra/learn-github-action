@@ -1,0 +1,19 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "package": "ncc build --source-map --license licenses.txt",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.0.4"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.3",
+    "ncc": "^0.3.6"
+  }
+}
