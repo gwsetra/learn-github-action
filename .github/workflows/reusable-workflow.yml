@@ -11,18 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # - uses: sainsburys-tech/bosun-actions-setup@v1
         name: Setup
         id: setup
       - name: Run a one-line script
         run: echo ${{ fromJson(steps.setup) }}
       - name: Run a one-line script
         run: echo ${{ fromJson(steps.setup.outputs.dockerParams) }}
-        # with:
-        #   token: ${{ secrets.GITHUB_TOKEN }}
-        #   # tags: "$ECR/$BOSUN_PRODUCT/$BOSUN_APP:${{ inputs.tags }}"
-        #   # Because this is a reusable workflow we have to tell it the name of the job to wait for
-        #   job-name: "call-workflow / build"
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
         # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
