@@ -14,9 +14,9 @@ jobs:
         name: Setup
         id: setup
       - name: Run a one-line script
-        run: echo ${{ fromJson(steps.setup) }}
+        run: echo ${{ (steps.setup) }}
       - name: Run a one-line script
-        run: echo ${{ fromJson(steps.setup.outputs.dockerParams) }}
+        run: echo ${{ (steps.setup.outputs.dockerParams) }}
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
         # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
