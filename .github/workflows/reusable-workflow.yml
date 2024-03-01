@@ -8,9 +8,7 @@ on:
 #    outputs: You can add outputs as well as inputs
 jobs:
   build:
-    runs-on:
-      - self-hosted
-      - build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       # - uses: sainsburys-tech/bosun-actions-setup@v1
