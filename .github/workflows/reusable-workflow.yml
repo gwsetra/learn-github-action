@@ -13,9 +13,11 @@ jobs:
       - uses: actions/checkout@v4
         name: Setup
         id: setup
-      - name: Run a one-line script
+      - name: Run a one-line script 1
+        run: echo "$GITHUB_CONTEXT"
+      - name: Run a one-line script 2
         run: echo ${{ (steps.setup) }}
-      - name: Run a one-line script
+      - name: Run a one-line script 3
         run: echo ${{ (steps.setup.outputs.dockerParams) }}
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
