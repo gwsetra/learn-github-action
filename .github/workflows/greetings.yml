@@ -15,6 +15,7 @@ on:
 jobs:
   greeting:
     runs-on: ubuntu-latest
+    environment: test_env
     permissions:
       issues: write
       pull-requests: write
