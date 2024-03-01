@@ -15,12 +15,84 @@ on:
 jobs:
   greeting:
     runs-on: ubuntu-latest
+    environment: test_env
     permissions:
       issues: write
       pull-requests: write
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "Message that will be displayed on users' first issue"
+          pr-message: "Message that will be displayed on users' first pull request"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+
+      - name: Show default environment variables
+        run: |
+          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
+          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
+          echo "The run id is: $GITHUB_RUN_ID"
+          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+          echo "GitHub SHA: $GITHUB_SHA"
+      - uses: actions/checkout@v4
+        name: Setup
+        id: setup
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tags: "setra_test_latihan_githubaction123"
+          # Because this is a reusable workflow we have to tell it the name of the job to wait for
+          job-name: "call-workflow / build"
+      - name: Run a one-line script 0
+        run: echo 'TAG_NAME="${{ github.ref }}"'
+      - name: Run a one-line script 1
+        run: echo "$GITHUB_CONTEXT"
+      - name: Run a one-line script 2
+        run: echo ${{ (steps.setup) }}
+      - name: Run a one-line script 3
+        run: echo ${{ (steps.setup.outputs.dockerParams) }}
+      - name: Run a one-line script 4
+        run: ${{ steps.setup.outputs.imageExists}}
+      - name: DOCKER_USERNAME
+        run: echo "${{ secrets.DOCKER_USERNAME }}"
+      - name: DOCKER_PASSWORD
+        run: echo "${{ secrets.DOCKER_PASSWORD }}"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+      - name: Build and push
+        uses: docker/build-push-action@v5.0.0
+        # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
+        # if: ${{ steps.setup.outputs.imageExists == 'false' }}
+        # Parameters can be passed in using the with attribute, the simplest possible approach to this is to pass the entire dockerParams object in. This will only push the image that is built when the workflow was triggered by changes being pushed to a branch (to avoid pushing images in PRs)
+        with:
+          context: .
+          push: true
+          repository: gwsetra/testlatihan
+          tags: gwsetra/testlatihan:testlatihan2
