@@ -65,7 +65,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: gwsetra
-          password: dckr_pat_gVc5TlMAbAAqa5cerDetuXD50Q4
+          password: 123123123123
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
         # This if statement prevents immutable images from being overwritten https://bosun-docs-user.int.prd.jspaas.uk/docs/build-deploy/github-actions-tips/#re-pushing-images-to-immutable-ecrs
